@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multicontpod-deployment
+  namespace: activity2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: step2
+  template:
+    metadata:
+      labels:
+        app: step2
+    spec:
+      containers:
+        - name: frontend
+          image: nginx:1.24.0-alpine
+          volumeMounts:
+            - name: html
+              mountPath: /usr/share/nginx/html
+          ports:
+            - containerPort: 80
+        - name: backend
+          image: debian:11.8-slim
+          volumeMounts:
+            - name: html
+              mountPath: /html
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              while true; do
+                date > /html/index.html;
+                sleep 60;
+              done
+      volumes:
+        - name: html
+          emptyDir: {}

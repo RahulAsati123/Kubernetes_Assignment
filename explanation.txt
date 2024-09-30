@@ -1,0 +1,5 @@
+
+1. NodePort Service: A NodePort service exposes the pod on a static port (31769) on all cluster nodes, allowing external traffic to access the pod.
+
+
+2. Routing: When a request is made to any node’s IP address on port 31769 (e.g., http://<node-ip>:31769), Kubernetes routes the request to the appropriate pod using the service’s selector, which ensures that the request reaches the multi-container pod.

@@ -1,0 +1,59 @@
+Documentation for the Entire Project
+
+Task 1: Create Namespace
+File: step1.yaml
+This file creates the activity2 namespace. It is applied using:
+
+microk8s kubectl apply -f namespace.yaml
+
+
+Task 2: Create Multi-container Pod
+File: step2.yaml
+This file defines a pod with two containers:
+Backend container: Writes the current date to /html/index.html.
+Frontend container: Serves this file via Nginx on port 80.
+This file is applied using:
+
+micork8s kubectl apply -f multi-container-pod.yaml
+
+
+Task 3: Save index.html from Backend Container
+File: backend_index.txt
+The content of the index.html file from the backend container is saved using:
+
+microk8s kubectl exec multicontpod-deployment-7d598dcd78-56qdr -c backend -n activity2 -- cat /html/index.html > backend_index.txt
+
+
+
+Task 4: Save index.html from Frontend Container
+File: frontend_index.txt
+The content of the index.html file from the frontend container is saved using:
+
+microk8s kubectl exec multicontpod-deployment-7d598dcd78-56qdr -c frontend -n activity2 -- cat /usr/share/nginx/html/index.html > frontend_index.txt
+
+
+Task 5: Create NodePort Service
+File: service.yaml
+This file creates a NodePort service that exposes the multi-container pod on port 31769 externally. It is applied using:
+
+microk8s kubectl apply -f service.yaml
+
+
+Task 6: Explanation
+File: explanation.txt
+
+
+This file includes the following explanation:
+
+1. NodePort Service: The NodePort service exposes the pod on port 31769, allowing external access to the pod via any node’s IP address and this port.
+
+2. Routing: Kubernetes routes requests from the NodePort (31769) to the correct pod using the service’s selector, which matches the pod based on labels. This ensures that traffic reaches the appropriate pod running Nginx, which serves the current date.
+
+
+
+
+
+
+
+Note:
+port forwarding: microk8s kubectl port-forward pod/multi-container-pod 8080:80 -n activity2 
